@@ -1,3 +1,6 @@
+import time
+
+
 HELP = """
 help  - список команд
 add   - добавить задачу
@@ -7,6 +10,15 @@ exit  - закрыть приложение
 """
 
 todo = {}
+
+def checkDate(date):
+  try:
+    time.strptime(date, "%d.%m.%Y")
+    return True
+  except ValueError:
+    print("Error. Неправильный формат даты")
+    return False
+
 print ("Введите команду, введите help для вывода списка команд")
 
 while True:
@@ -24,7 +36,9 @@ while True:
   elif userAnswer == "help":
     print(HELP)
   elif userAnswer == "show":
-    print(todo)
+    for date in sorted( todo.keys() ):
+      for tasks in todo[ date ]:
+        print( f"[ {date} ] - {tasks}" )
   elif userAnswer == "exit":
     break
   elif userAnswer == "done":
