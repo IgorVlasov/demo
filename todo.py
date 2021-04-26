@@ -19,20 +19,32 @@ def checkDate(date):
     print("Error. Неправильный формат даты")
     return False
 
+def add(command, usrAns):
+  if command == 1:
+    #получить дату
+    print()
+  elif command == 2:
+    #получить task и добавить в todo
+    print()
+
+
+  userDate = input( "Введите дату:\n" )
+  if checkDate(userDate) == False:
+    continue
+  userTask = input( "Что нужно сделать?" )
+
+  if userDate in todo.keys():
+    todo[ userDate ].append( userTask )
+  else:
+    todo[ userDate ] = [ userTask ]
+  print(f"[ {userDate} ] - добавлена задача '{userTask}'")
 print ("Введите команду, введите help для вывода списка команд")
 
 while True:
   userAnswer = input()
 
   if userAnswer == "add":
-    userDate = input( "Введите дату:\n" )
-    userTask = input( "Что нужно сделать?" )
-
-    if userDate in todo.keys():
-      todo[ userDate ].append( userTask )
-    else:
-      todo[ userDate ] = [ userTask ]
-    print(f"[ {userDate} ] - добавлена задача '{userTask}'")
+    
   elif userAnswer == "help":
     print(HELP)
   elif userAnswer == "show":
