@@ -64,7 +64,7 @@ async def echo(message:Message):
         if uDate in todo:
             todo[ uDate ].append( uTask )
         else:
-            todo[ uDate ] = [ uTask ]
+            todo[ uDate ] =  uTask 
         await message.answer(f"Добавлена задача '{uTask}' на {uDate} ")
         reqv = 0
     elif reqv == 3:
