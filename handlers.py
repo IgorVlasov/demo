@@ -10,6 +10,8 @@ reqv = 0
 0 - ожидание команды
 1 - ожидание даты
 2 - ожидание задачи
+3 - ожидание даты для команды done
+4 - удаление элемента при выборе
 """
 
 async def send_to_admin(dp):
@@ -34,7 +36,9 @@ async def show(message:Message):
 
 @dp.message_handler(commands=["done"])
 async def done(message:Message):
-    await message.answer(text="Работает")
+    global reqv
+    await message.answer(text="Введите дату")
+    reqv = 3
 
 @dp.message_handler(commands=["help"])
 async def help(message:Message):
@@ -63,3 +67,39 @@ async def echo(message:Message):
             todo[ uDate ] = [ uTask ]
         await message.answer(f"Добавлена задача '{uTask}' на {uDate} ")
         reqv = 0
+    elif reqv == 3:
+        uDate = message.text
+        try:
+            time.strptime(uDate, "%d.%m.%Y") # 12.02.2021
+        except ValueError:
+            await message.answer(text = "не верный формат даты")
+            reqv = 0
+            return
+        
+        if uDate in todo:
+            if len( todo[ uDate ] ) == 1:
+                tmp = todo.pop(uDate)
+                await message.answer(f"Задача '{tmp}' - удалена")
+            else:
+                await message.answer("Какую задачу удалить?")
+                tmp = 1
+                for task in todo[ uDate ]:
+                    await message.answer(f"[{tmp}] - {task}")
+                    tmp += 1
+                reqv = 4
+        else:
+            await message.answer("Не задач на эту дату")
+            reqv = 0
+    elif reqv == 4:
+        try:
+            int(message.text)
+        except ValueError:
+            await message.answer("Не верный формат команды")
+            reqv = 0
+            return
+        if len( todo[ uDate ] ) >= int(message.text):
+            await message.answer(f"Задача '{todo[uDate].pop(int(message.text)-1)}' - удалена")
+            reqv = 0
+        else:
+            await message.answer("Нет такой команды")
+            reqv = 0
